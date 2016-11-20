@@ -1,0 +1,191 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
+        x:Class="Classification.View.MainWindow"
+        xmlns:util="clr-namespace:Classification.Util"
+        Title="MainWindow" Height="600" Width="1200">
+
+    <Window.Resources>
+        <util:BooleanConverter x:Key="BooleanConverter"/>
+    </Window.Resources>
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition MinWidth="250" MaxWidth="250" Width="*"/>
+            <ColumnDefinition MinWidth="600" Width="3*"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0" BorderThickness="1" BorderBrush="#FFBBBBBB">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+
+                <DockPanel DockPanel.Dock="Top" Grid.Row="0">
+                    <Grid DockPanel.Dock="Top" Height="25" Style="{StaticResource Dark}">
+                        <TextBlock Text="Buildings" FontSize="14" TextAlignment="Center" Foreground="White" VerticalAlignment="Center"/>
+                    </Grid>
+
+                    <syncfusion:GridDataControl x:Name="GridBuildings" 
+						AutoPopulateColumns="False"
+						AutoPopulateRelations="False"
+						ColumnSizer="Star"
+                        ItemsSource="{Binding Buildings, Mode=OneWay}"
+						SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+						VisualStyle="Metro" 
+						ShowAddNewRow="False"
+						FontSize="13" 
+						AllowEdit="False" DockPanel.Dock="Bottom" UpdateMode="RowCachedMode">
+                        <syncfusion:GridDataControl.VisibleColumns>
+                            <syncfusion:GridDataVisibleColumn MappingName="Year">
+                                <syncfusion:GridDataVisibleColumn.HeaderStyle>
+                                    <syncfusion:GridDataColumnStyle HorizontalAlignment="Center"/>
+                                </syncfusion:GridDataVisibleColumn.HeaderStyle>
+                                <syncfusion:GridDataVisibleColumn.ColumnStyle>
+                                    <syncfusion:GridDataColumnStyle HorizontalAlignment="Center"/>
+                                </syncfusion:GridDataVisibleColumn.ColumnStyle>
+                            </syncfusion:GridDataVisibleColumn>
+
+                            <syncfusion:GridDataVisibleColumn MappingName="CountFloors">
+                                <syncfusion:GridDataVisibleColumn.HeaderStyle>
+                                    <syncfusion:GridDataColumnStyle HorizontalAlignment="Center"/>
+                                </syncfusion:GridDataVisibleColumn.HeaderStyle>
+                                <syncfusion:GridDataVisibleColumn.ColumnStyle>
+                                    <syncfusion:GridDataColumnStyle HorizontalAlignment="Center"/>
+                                </syncfusion:GridDataVisibleColumn.ColumnStyle>
+                            </syncfusion:GridDataVisibleColumn>
+                        </syncfusion:GridDataControl.VisibleColumns>
+                    </syncfusion:GridDataControl>
+                </DockPanel>
+
+                <StackPanel DockPanel.Dock="Bottom" Grid.Row="1">
+                    <DockPanel>
+                        <Grid DockPanel.Dock="Top" Height="25" Style="{StaticResource Dark}">
+                            <TextBlock Text="Year" FontSize="14" TextAlignment="Center" Foreground="White" VerticalAlignment="Center"/>
+                        </Grid>
+                        <Grid Margin="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="5*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Slider x:Name="sliderYear" Value="{Binding Year, Mode=TwoWay}" IsSnapToTickEnabled="True" Grid.Column="0" Margin="0,0,10,0" Minimum="1800" Maximum="2020" />
+                            <TextBox x:Name="textBoxYear" Text="{Binding Value, ElementName=sliderYear}" Grid.Column="1" Background="GhostWhite" HorizontalContentAlignment="Center"/>
+                        </Grid>
+                    </DockPanel>
+                    <DockPanel>
+                        <Grid DockPanel.Dock="Top" Height="25" Style="{StaticResource Dark}">
+                            <TextBlock Text="CountFloors" FontSize="14" TextAlignment="Center" Foreground="White" VerticalAlignment="Center"/>
+                        </Grid>
+                        <Grid Margin="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="5*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Slider x:Name="sliderCountFloors" Value="{Binding CountFloors, Mode=TwoWay}" IsSnapToTickEnabled="True" Grid.Column="0" Margin="0,0,10,0" Minimum="1" Maximum="180" />
+                            <TextBox x:Name="textBoxCountFloors" Text="{Binding Value, ElementName=sliderCountFloors}" Grid.Column="1" Background="GhostWhite" HorizontalContentAlignment="Center"/>
+                        </Grid>
+                    </DockPanel>
+
+                    <Separator Height="0.5" Background="#FFBBBBBB"/>
+
+                    <Grid Margin="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button Content="Add" 
+							Grid.Column="0" Margin="10,0,5,0" 
+							Style="{StaticResource MetroButton}"
+							Command="{Binding AddBuildingCommand}"/>
+
+                        <Button Content="Edit" 
+							Grid.Column="1" Margin="5,0" 
+							Style="{StaticResource MetroButton}"
+							Command="{Binding EditBuildingCommand}"/>
+
+                        <Button Content="Delete" 
+							Grid.Column="2" Margin="5,0,10,0" 
+							Style="{StaticResource MetroButton}"
+							Command="{Binding DeleteBuildingCommand}"/>
+                    </Grid>
+
+                    <Separator Height="0.5" Background="#FFBBBBBB"/>
+
+                    <Grid Margin="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="5*"/>
+                            <ColumnDefinition Width="5*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button Content="Classify"
+                                Grid.Column="1" Margin="10,0,5,0"
+			                    Command="{Binding DrawGraphCommand}"
+			                    Style="{StaticResource MetroButton}">
+                            <Button.IsEnabled>
+                                <MultiBinding Converter="{StaticResource BooleanConverter}">
+                                    <Binding Path="IsNormalized" Mode="OneWay"></Binding>
+                                    <Binding Path="IsTreeBuilt" Mode="OneWay"></Binding>
+                                </MultiBinding>
+                            </Button.IsEnabled>
+                        </Button>
+
+                        <Button Content="Normalize"
+                                Grid.Column="2" Margin="5,0,10,0"
+                                IsEnabled="{Binding IsNormalized, Converter={StaticResource BooleanConverter}, Mode=OneWay}"
+			                    Command="{Binding NormalizeCommand}"
+			                    Style="{StaticResource MetroButton}"/>
+                    </Grid>
+                </StackPanel>
+            </Grid>
+        </Border>
+        
+        <syncfusion:Chart Grid.Column="1">
+            <syncfusion:ChartArea>
+
+                <syncfusion:ChartArea.GridHeader>
+                    <TextBlock FontSize="20" FontWeight="Regular" FontFamily="Segoe UI" Margin="0,0,0,15"><Run Text="Prim's algorithm"/></TextBlock>
+                </syncfusion:ChartArea.GridHeader>
+
+                <syncfusion:ChartArea.PrimaryAxis>
+                    <syncfusion:ChartAxis Header="Count floors" LabelFontSize="11" 
+						syncfusion:ChartArea.ShowGridLines="False"/>
+                </syncfusion:ChartArea.PrimaryAxis>
+                
+                <syncfusion:ChartArea.SecondaryAxis>
+                    <syncfusion:ChartAxis Header="Year" LabelFontSize="11"
+						syncfusion:ChartArea.ShowGridLines="False"/>
+                </syncfusion:ChartArea.SecondaryAxis>
+
+                <syncfusion:ChartSeries DataSource="{Binding Vertices, Mode=OneWay}" 
+					BindingPathX="X" BindingPathsY="Y"
+					Type="{Binding ChartTypes, UpdateSourceTrigger=PropertyChanged}" 
+					Interior="#EE3D95FF" StrokeThickness="2" StrokePalette="Metro" Palette="Metro" IsIndexed="False">
+                    <syncfusion:ChartSeries.AdornmentsInfo>
+                        <syncfusion:ChartAdornmentInfo HorizontalAlignment="Center" 
+							VerticalAlignment="Center" 
+							Visible="True">
+                            <syncfusion:ChartAdornmentInfo.LabelTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Ellipse Height="12" Width="12" Fill="#EE3D95FF" HorizontalAlignment="Center"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </syncfusion:ChartAdornmentInfo.LabelTemplate>
+
+                        </syncfusion:ChartAdornmentInfo>
+                    </syncfusion:ChartSeries.AdornmentsInfo>
+                </syncfusion:ChartSeries>
+            </syncfusion:ChartArea>
+        </syncfusion:Chart>
+    </Grid>
+</Window>
