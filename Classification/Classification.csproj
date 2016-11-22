@@ -75,6 +75,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Model\BuildingContext.cs" />
+    <Compile Include="Model\BuildingContextInitializer.cs" />
     <Compile Include="Util\BooleanConverter.cs" />
     <Compile Include="Util\BuildingToVertexConverter.cs" />
     <Compile Include="Util\CommandHandler.cs" />

@@ -6,7 +6,7 @@ namespace Classification.Model
     {
         static BuildingContext()
         {
-            Database.SetInitializer<BuildingContext>(null);
+            Database.SetInitializer(new BuildingContextInitializer());
         }
 
         public BuildingContext() : base("DbConnection") { }
